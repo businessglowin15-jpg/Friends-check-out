@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Goal Chasers – Exam prep that fits your day</title>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#0d0820;--fg:#fff;--mut:#b9b0e0;--card:rgba(255,255,255,.07);--bd:rgba(255,255,255,.16);--a:#ff9ad5;--b:#9a8cff;--c:#5ee7ff;
+box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+html{scroll-behavior:smooth;scroll-padding-top:80px}
+*,*::before,*::after{box-sizing:inherit}
+body{margin:0;background:var(--bg);color:var(--fg);font:500 16px/1.6 'Bricolage Grotesque',system-ui,sans-serif;overflow-x:hidden}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+:focus-visible{outline:3px solid var(--c);outline-offset:3px}
+.blob{position:fixed;border-radius:50%;filter:blur(90px);opacity:.5;z-index:0;pointer-events:none;animation:dr 14s ease-in-out infinite alternate}
+@keyframes dr{to{transform:translate(70px,-90px) scale(1.2)}}
+.w{max-width:1080px;margin:0 auto;padding:0 20px;position:relative;z-index:1}
+/* buttons */
+.btn{border:1px solid var(--bd);background:var(--card);color:var(--fg);padding:11px 20px;border-radius:999px;font-weight:700;transition:transform .15s,background .2s}
+.btn:hover{transform:translateY(-2px);background:rgba(255,255,255,.14)}
+.btn:active{transform:scale(.96)}
+.btn.p{background:linear-gradient(90deg,var(--a),var(--b));color:#170c33;border:0}
+.btn.p:hover{background:linear-gradient(90deg,var(--a),var(--c))}
+.btn.lg{padding:15px 28px;font-size:17px}
+/* nav */
+header{position:sticky;top:env(safe-area-inset-top,0px);z-index:20;background:rgba(13,8,32,.75);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border-bottom:1px solid var(--bd)}
+.nav{display:flex;align-items:center;gap:22px;height:66px}
+.logo{font-weight:800;font-size:21px;letter-spacing:-.02em;display:flex;align-items:center;gap:8px}
+.logo i{width:26px;height:26px;border-radius:8px;background:linear-gradient(135deg,var(--a),var(--c));display:block;animation:sp 8s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
+.links{display:flex;gap:22px;margin-left:16px;color:var(--mut)}
+.links a:hover{color:#fff}
+.sp{flex:1}
+.ham{display:none;width:42px;height:42px;padding:0;font-size:20px}
+.mob{display:none;flex-direction:column;gap:6px;padding:10px 20px 18px;border-top:1px solid var(--bd)}
+.mob.on{display:flex}
+.mob a{padding:10px 0;color:var(--mut)}
+/* hero */
+.hero{padding:70px 0 40px;text-align:center}
+.tag{display:inline-flex;gap:8px;align-items:center;padding:7px 14px;border:1px solid var(--bd);border-radius:999px;background:var(--card);font-size:14px;color:var(--mut);animation:pop .6s both}
+.tag b{width:8px;height:8px;border-radius:50%;background:#3dff9a;animation:pl 1.6s infinite}
+@keyframes pl{0%{box-shadow:0 0 0 0 #3dff9a99}100%{box-shadow:0 0 0 10px #0000}}
+h1{font-size:clamp(42px,9vw,86px);line-height:.98;letter-spacing:-.04em;font-weight:800;margin:22px auto 18px;max-width:14ch;background:linear-gradient(90deg,var(--a),var(--b),var(--c),var(--a));background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:gs 7s linear infinite,pop .8s .1s both}
+@keyframes gs{to{background-position:300% 0}}
+@keyframes pop{from{opacity:0;transform:translateY(24px) scale(.96)}to{opacity:1;transform:none}}
+.hero p{color:var(--mut);font-size:19px;max-width:46ch;margin:0 auto 28px}
+.row{display:flex;gap:12px;justify-content:center;flex-wrap:wrap}
+.stats{display:flex;justify-content:center;gap:14px;flex-wrap:wrap;margin-top:46px}
+.stat{padding:14px 22px;border-radius:20px;background:var(--card);border:1px solid var(--bd);animation:fl 5s ease-in-out infinite}
+.stat:nth-child(2){animation-delay:-1.6s}.stat:nth-child(3){animation-delay:-3.2s}
+.stat b{display:block;font-size:26px}
+.stat span{color:var(--mut);font-size:14px}
+@keyframes fl{50%{transform:translateY(-10px)}}
+.mq{overflow:hidden;white-space:nowrap;border-block:1px solid var(--bd);padding:14px 0;margin:40px 0;color:var(--mut);position:relative;z-index:1}
+.mq div{display:inline-block;animation:mq 22s linear infinite}
+@keyframes mq{to{transform:translateX(-50%)}}
+/* sections */
+section{padding:56px 0}
+h2{font-size:clamp(30px,5vw,46px);letter-spacing:-.03em;line-height:1.05;margin:0 0 10px}
+.sub{color:var(--mut);max-width:50ch;margin:0 0 30px}
+.grid{display:grid;gap:16px;grid-template-columns:repeat(3,1fr)}
+.card{padding:24px;border-radius:24px;background:var(--card);border:1px solid var(--bd);transition:transform .25s,border-color .25s;display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.card:hover{transform:translateY(-6px);border-color:var(--b)}
+.card .ic{font-size:30px}
+.card h3{margin:0;font-size:21px}
+.card p{margin:0 0 8px;color:var(--mut);font-size:15px;flex:1}
+.plan.hot{border-color:var(--a);background:linear-gradient(160deg,rgba(255,154,213,.16),rgba(154,140,255,.1))}
+.price{font-size:40px;font-weight:800;letter-spacing:-.03em}
+.price small{font-size:15px;color:var(--mut);font-weight:500}
+.plan ul{margin:0 0 10px;padding:0;list-style:none;color:var(--mut);font-size:15px}
+.plan li::before{content:"✓ ";color:#3dff9a}
+.plan .btn{width:100%}
+details{border:1px solid var(--bd);background:var(--card);border-radius:18px;padding:16px 20px;margin-bottom:10px}
+summary{font-weight:700;cursor:pointer;list-style:none;display:flex;justify-content:space-between}
+summary::after{content:"+";font-size:22px;transition:transform .2s}
+details[open] summary::after{transform:rotate(45deg)}
+details p{color:var(--mut);margin:10px 0 0}
+.cta{text-align:center;padding:50px 20px;border-radius:32px;background:linear-gradient(135deg,rgba(255,154,213,.22),rgba(154,140,255,.22),rgba(94,231,255,.18));border:1px solid var(--bd)}
+.news{display:flex;gap:10px;max-width:440px;margin:22px auto 0}
+.news input,.f input,.f textarea{flex:1;width:100%;padding:13px 16px;border-radius:14px;border:1px solid var(--bd);background:rgba(0,0,0,.3);color:#fff;font:inherit}
+footer{padding:40px 0 100px;color:var(--mut);font-size:14px;position:relative;z-index:1}
+.fr{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;border-top:1px solid var(--bd);padding-top:24px}
+.fr div{display:flex;gap:18px;flex-wrap:wrap}
+.fr a:hover{color:#fff}
+/* dialog */
+dialog{border:1px solid var(--bd);border-radius:26px;background:#181033;color:#fff;padding:0;width:min(440px,calc(100vw - 32px));animation:dp .28s cubic-bezier(.2,1.4,.4,1)}
+dialog::backdrop{background:rgba(5,2,15,.7);backdrop-filter:blur(6px);animation:fi .25s}
+@keyframes dp{from{opacity:0;transform:scale(.85) translateY(20px)}}
+@keyframes fi{from{opacity:0}}
+.dl{padding:28px;position:relative}
+.dl h3{margin:0 0 6px;font-size:26px;letter-spacing:-.02em}
+.dl p{color:var(--mut);margin:0 0 16px}
+.x{position:absolute;right:14px;top:14px;width:36px;height:36px;padding:0;border-radius:50%}
+.f{display:flex;flex-direction:column;gap:10px}
+.f .btn{margin-top:6px}
+.vid{aspect-ratio:16/9;border-radius:18px;background:linear-gradient(135deg,#3b1d7a,#0e4a6b);display:grid;place-items:center;position:relative;overflow:hidden;margin-bottom:12px}
+.vid button{width:70px;height:70px;border-radius:50%;border:0;background:#fff;color:#170c33;font-size:26px;animation:pl2 1.8s infinite}
+@keyframes pl2{0%{box-shadow:0 0 0 0 #fff9}100%{box-shadow:0 0 0 22px #fff0}}
+.vid.play button{animation:none}
+.prog{position:absolute;left:0;bottom:0;height:5px;background:linear-gradient(90deg,var(--a),var(--c));width:0;transition:width 6s linear}
+.vid.play .prog{width:100%}
+/* toast */
+#toast{position:fixed;left:50%;bottom:calc(24px + env(safe-area-inset-bottom,0px));transform:translate(-50%,150%);background:#fff;color:#170c33;padding:13px 22px;border-radius:999px;font-weight:700;z-index:100;transition:transform .35s cubic-bezier(.2,1.4,.4,1);max-width:90vw;text-align:center}
+#toast.on{transform:translate(-50%,0)}
+/* chat */
+.fab{position:fixed;right:18px;bottom:calc(18px + env(safe-area-inset-bottom,0px));z-index:30;width:58px;height:58px;border-radius:50%;border:0;background:linear-gradient(135deg,var(--a),var(--b));font-size:26px;box-shadow:0 10px 30px rgba(154,140,255,.5);animation:fl 3s ease-in-out infinite}
+.chat{position:fixed;right:18px;bottom:calc(88px + env(safe-area-inset-bottom,0px));z-index:30;width:min(340px,calc(100vw - 36px));border-radius:24px;background:#181033;border:1px solid var(--bd);overflow:hidden;display:none;box-shadow:0 20px 50px rgba(0,0,0,.5)}
+.chat.on{display:block;animation:dp .28s cubic-bezier(.2,1.4,.4,1)}
+.ch{padding:14px 18px;font-weight:800;background:linear-gradient(90deg,var(--a),var(--b));color:#170c33}
+.cb{padding:14px;display:flex;flex-direction:column;gap:8px;max-height:260px;overflow:auto}
+.m{padding:10px 14px;border-radius:16px;background:var(--card);max-width:85%;font-size:15px;animation:pop .3s both}
+.m.u{align-self:flex-end;background:var(--b);color:#170c33}
+.qr{display:flex;flex-wrap:wrap;gap:8px;padding:0 14px 14px}
+.qr .btn{padding:8px 14px;font-size:14px}
+@media(max-width:800px){.links,.nav>.hide{display:none}.ham{display:block}.grid{grid-template-columns:1fr}.news{flex-direction:column}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation:none!important;transition:none!important}html{scroll-behavior:auto}}
+</style>
+</head>
+<body>
+<div class="blob" style="width:340px;height:340px;background:#ff5fb2;left:-100px;top:60px"></div>
+<div class="blob" style="width:380px;height:380px;background:#6a5cff;right:-120px;top:380px;animation-delay:-5s"></div>
+
+<header>
+<div class="w nav">
+  <a href="#top" class="logo"><i></i>Goal Chasers</a>
+  <nav class="links" aria-label="Main"><a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a><a href="#join">Contact</a></nav>
+  <span class="sp"></span>
+  <button class="btn hide" data-open="login">Log in</button>
+  <button class="btn p hide" data-open="signup">Sign up</button>
+  <button class="btn ham" id="ham" aria-label="Menu" aria-expanded="false">☰</button>
+</div>
+<div class="mob" id="mob">
+  <a href="#features">Features</a><a href="#pricing">Pricing</a><a href="#faq">FAQ</a>
+  <div class="row" style="justify-content:flex-start"><button class="btn" data-open="login">Log in</button><button class="btn p" data-open="signup">Sign up</button></div>
+</div>
+</header>
+
+<main id="top">
+<div class="w hero">
+  <span class="tag"><b></b>New mock tests every morning</span>
+  <h1>Prep that fits your day</h1>
+  <p>Short daily quizzes, full-length mocks and a rank tracker for SSC and other government exams.</p>
+  <div class="row">
+    <button class="btn p lg" data-open="signup">Get started free</button>
+    <button class="btn lg" data-open="demo">▶ Watch demo</button>
+  </div>
+  <div class="stats">
+    <div class="stat"><b>50k+</b><span>Questions</span></div>
+    <div class="stat"><b>120+</b><span>Mock tests</span></div>
+    <div class="stat"><b>4.8★</b><span>Learner rating</span></div>
+  </div>
+</div>
+<div class="mq"><div>SSC CGL ✺ SSC CHSL ✺ SSC MTS ✺ Banking ✺ Railways ✺ State exams ✺ SSC CGL ✺ SSC CHSL ✺ SSC MTS ✺ Banking ✺ Railways ✺ State exams ✺&nbsp;SSC CGL ✺ SSC CHSL ✺ SSC MTS ✺ Banking ✺ Railways ✺ State exams ✺ SSC CGL ✺ SSC CHSL ✺ SSC MTS ✺ Banking ✺ Railways ✺ State exams ✺&nbsp;</div></div>
+
+<section id="features"><div class="w">
+  <h2>Everything you need to rank higher</h2>
+  <p class="sub">Tools that turn scattered study time into steady progress.</p>
+  <div class="grid" id="fg"></div>
+</div></section>
+
+<section id="pricing"><div class="w">
+  <h2>Simple pricing</h2>
+  <p class="sub">Start free. Upgrade when you're ready.</p>
+  <div class="grid" id="pg"></div>
+</div></section>
+
+<section id="faq"><div class="w">
+  <h2>Questions, answered</h2><p class="sub">Quick answers before you join.</p>
+  <details><summary>Are the mock tests timed?</summary><p>Yes. Each mock follows the real exam pattern, with sectional timers and negative marking.</p></details>
+  <details><summary>Can I use it on my phone?</summary><p>Yes. The whole site works on any screen size.</p></details>
+  <details><summary>Can I cancel anytime?</summary><p>Yes. Plans are monthly and you can stop whenever you want.</p></details>
+</div></section>
+
+<section id="join"><div class="w">
+  <div class="cta">
+    <h2>Ready to start your streak?</h2>
+    <p class="sub" style="margin:0 auto">Get one free mock test in your inbox today.</p>
+    <form class="news" id="news"><input type="email" required placeholder="you@email.com" aria-label="Email"><button class="btn p" type="submit">Subscribe</button></form>
+    <div class="row" style="margin-top:18px"><button class="btn" data-open="contact">Talk to us</button></div>
+  </div>
+</div></section>
+</main>
+
+<footer><div class="w fr">
+  <span>© 2026 Goal Chasers. Demo website.</span>
+  <div><a href="#" data-toast="Privacy page is a demo">Privacy</a><a href="#" data-toast="Terms page is a demo">Terms</a><a href="#" data-open="contact">Contact</a></div>
+</div></footer>
+
+<button class="fab" id="fab" aria-label="Open chat">💬</button>
+<div class="chat" id="chat" role="dialog" aria-label="Chat">
+  <div class="ch">Chat with Goal Chasers</div>
+  <div class="cb" id="cb"><div class="m">Hey! What can we help with?</div></div>
+  <div class="qr"><button class="btn" data-q="How do mocks work?">How do mocks work?</button><button class="btn" data-q="Is it free?">Is it free?</button><button class="btn" data-q="Talk to a human">Talk to a human</button></div>
+</div>
+
+<dialog id="dlg"></dialog>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+const $=s=>document.querySelector(s),dlg=$('#dlg');
+const FEATURES=[
+['📝','Full-length mocks','Real exam pattern with sectional timers and negative marking.'],
+['⚡','Daily quick quizzes','Ten questions a day on one topic to keep your streak alive.'],
+['📈','Rank tracker','See how your score compares with other aspirants after every test.'],
+['🧠','Smart revision','Missed questions come back until you get them right.'],
+['📚','Topic notes','Short, clear notes for every subject in the syllabus.'],
+['👥','Study squads','Team up with friends and compete on a weekly leaderboard.']];
+const PLANS=[
+['Free','₹0',['1 mock per week','Daily quick quiz','Basic rank tracker']],
+['Pro','₹199',['Unlimited mocks','Smart revision','Full topic notes','Detailed analytics'],1],
+['Squad','₹499',['Everything in Pro','Up to 5 members','Squad leaderboard']]];
+$('#fg').innerHTML=FEATURES.map((f,i)=>`<article class="card"><span class="ic">${f[0]}</span><h3>${f[1]}</h3><p>${f[2]}</p><button class="btn" data-feat="${i}">Learn more</button></article>`).join('');
+$('#pg').innerHTML=PLANS.map((p,i)=>`<article class="card plan ${p[3]?'hot':''}"><h3>${p[0]}</h3><div class="price">${p[1]}<small>/month</small></div><ul>${p[2].map(x=>`<li>${x}</li>`).join('')}</ul><button class="btn ${p[3]?'p':''}" data-plan="${i}">Choose ${p[0]}</button></article>`).join('');
+
+const form=(t,s,fields,btn,msg)=>`<div class="dl"><button class="btn x" data-close aria-label="Close">✕</button><h3>${t}</h3><p>${s}</p><form class="f" data-msg="${msg}">${fields}<button class="btn p lg" type="submit">${btn}</button></form></div>`;
+const T={
+login:()=>form('Welcome back','Log in to continue your streak.','<input type="email" required placeholder="Email" aria-label="Email"><input type="password" required placeholder="Password" aria-label="Password">','Log in','Logged in (demo)'),
+signup:()=>form('Create your account','Free forever. No card needed.','<input required placeholder="Name" aria-label="Name"><input type="email" required placeholder="Email" aria-label="Email"><input type="password" required placeholder="Password" aria-label="Password">','Create account','Account created (demo)'),
+contact:()=>form('Talk to us','We reply within a day.','<input required placeholder="Name" aria-label="Name"><input type="email" required placeholder="Email" aria-label="Email"><textarea rows="3" required placeholder="Your message" aria-label="Message"></textarea>','Send message','Message sent (demo)'),
+demo:()=>`<div class="dl"><button class="btn x" data-close aria-label="Close">✕</button><h3>See it in action</h3><p>A quick tour of a mock test.</p><div class="vid" id="vid"><button id="pb" aria-label="Play">▶</button><div class="prog"></div></div><button class="btn p lg" data-open="signup" style="width:100%">Get started free</button></div>`,
+feat:i=>`<div class="dl"><button class="btn x" data-close aria-label="Close">✕</button><div style="font-size:42px">${FEATURES[i][0]}</div><h3>${FEATURES[i][1]}</h3><p>${FEATURES[i][2]} Available on every plan.</p><button class="btn p lg" data-close data-toast="Nice choice" style="width:100%">Got it</button></div>`,
+plan:i=>`<div class="dl"><button class="btn x" data-close aria-label="Close">✕</button><h3>${PLANS[i][0]} plan</h3><p>${PLANS[i][1]} per month. Cancel anytime.</p><ul style="padding-left:18px;color:var(--mut);margin:0 0 18px">${PLANS[i][2].map(x=>`<li>${x}</li>`).join('')}</ul><button class="btn p lg" data-close data-toast="${PLANS[i][0]} plan selected (demo)" style="width:100%">Confirm plan</button></div>`};
+function open(k,a){dlg.innerHTML=T[k](a);if(!dlg.open)dlg.showModal()}
+let tt;function toast(m){const t=$('#toast');t.textContent=m;t.classList.add('on');clearTimeout(tt);tt=setTimeout(()=>t.classList.remove('on'),2400)}
+document.addEventListener('click',e=>{
+const o=e.target.closest('[data-open]'),f=e.target.closest('[data-feat]'),p=e.target.closest('[data-plan]'),c=e.target.closest('[data-close]'),t=e.target.closest('[data-toast]');
+if(e.target.closest('#pb')){$('#vid').classList.toggle('play');e.target.textContent=$('#vid').classList.contains('play')?'❚❚':'▶';return}
+if(t){e.preventDefault();toast(t.dataset.toast)}
+if(c)dlg.close();
+if(o){e.preventDefault();$('#mob').classList.remove('on');open(o.dataset.open)}
+if(f)open('feat',+f.dataset.feat);
+if(p)open('plan',+p.dataset.plan);
+if(e.target===dlg)dlg.close();
+const q=e.target.closest('[data-q]');
+if(q){const cb=$('#cb');const R={'How do mocks work?':'Timed tests in the real exam pattern, with instant results.','Is it free?':'Yes, the Free plan is free forever.','Talk to a human':'Sure! Use the Talk to us button on this page.'};
+cb.insertAdjacentHTML('beforeend',`<div class="m u">${q.dataset.q}</div>`);
+setTimeout(()=>{cb.insertAdjacentHTML('beforeend',`<div class="m">${R[q.dataset.q]}</div>`);cb.scrollTop=cb.scrollHeight},500);cb.scrollTop=cb.scrollHeight}
+});
+document.addEventListener('submit',e=>{e.preventDefault();const m=e.target.dataset.msg;if(m){dlg.close();toast(m)}});
+$('#news').addEventListener('submit',e=>{e.target.reset();toast('You are on the list (demo)')});
+$('#fab').addEventListener('click',()=>{const c=$('#chat');c.classList.toggle('on');$('#fab').textContent=c.classList.contains('on')?'✕':'💬'});
+$('#ham').addEventListener('click',()=>{const m=$('#mob');m.classList.toggle('on');$('#ham').setAttribute('aria-expanded',m.classList.contains('on'))});
+document.querySelectorAll('#mob a').forEach(a=>a.addEventListener('click',()=>$('#mob').classList.remove('on')));
+</script>
+</body>
+</html>
