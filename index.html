@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Referral Test</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #fff; color: #111; font: 15px/1.5 system-ui, -apple-system, Segoe UI, Roboto, sans-serif; }
+  main { max-width: 560px; margin: 0 auto; padding: 16px; }
+  h1 { font-size: 20px; margin: 8px 0 16px; }
+  h2 { font-size: 15px; margin: 0 0 10px; }
+  .card { border: 1px solid #ddd; border-radius: 8px; padding: 14px; margin-bottom: 14px; background: #fff; }
+  .row { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; border-bottom: 1px solid #f0f0f0; }
+  .row:last-child { border-bottom: 0; }
+  .label { color: #666; flex-shrink: 0; }
+  .val { text-align: right; word-break: break-all; font-weight: 600; }
+  .yes { color: #0a7d2c; } .no { color: #b00020; }
+  button { font: inherit; padding: 10px 14px; border: 1px solid #111; background: #111; color: #fff; border-radius: 6px; cursor: pointer; margin-top: 10px; }
+  button.light { background: #fff; color: #111; }
+  ol { margin: 0; padding-left: 20px; } li { margin-bottom: 4px; }
+  .ref-item { padding: 8px 0; border-bottom: 1px solid #f0f0f0; font-size: 13px; word-break: break-all; }
+  .ref-item:last-child { border-bottom: 0; }
+  .muted { color: #666; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Referral System Test</h1>
+
+  <div class="card">
+    <h2>Firebase</h2>
+    <div class="row"><span class="label">Connection status</span><span class="val" id="status">Connecting...</span></div>
+  </div>
+
+  <div class="card">
+    <h2>My Info</h2>
+    <div class="row"><span class="label">My User ID</span><span class="val" id="userId">-</span></div>
+    <div class="row"><span class="label">My Referral Code</span><span class="val" id="myCode">-</span></div>
+    <div class="row"><span class="label">My Referral Link</span><span class="val" id="myLink">-</span></div>
+    <button id="copyBtn" class="light">Copy Referral Link</button>
+  </div>
+
+  <div class="card">
+    <h2>This Visit (Browser B)</h2>
+    <div class="row"><span class="label">Referral detected</span><span class="val" id="detected">-</span></div>
+    <div class="row"><span class="label">Referrer Code</span><span class="val" id="referrerCode">-</span></div>
+    <div class="row"><span class="label">Referral recorded</span><span class="val" id="recorded">-</span></div>
+    <div class="row"><span class="label">Firestore document ID</span><span class="val" id="docId">-</span></div>
+  </div>
+
+  <div class="card">
+    <h2>My Referrals</h2>
+    <div class="row"><span class="label">Total Referrals</span><span class="val" id="total">0</span></div>
+    <div id="list" class="muted">No referrals yet.</div>
+    <button id="refreshBtn">Refresh Referral Data</button>
+  </div>
+
+  <div class="card">
+    <h2>How to test</h2>
+    <ol>
+      <li>Open this website in Browser A.</li>
+      <li>Copy the referral link.</li>
+      <li>Open that link in Browser B / incognito / another device.</li>
+      <li>Check that Browser B shows "Referral detected: YES".</li>
+      <li>Open Firebase Console.</li>
+      <li>Check the "referrals" collection.</li>
+      <li>Confirm a new referral document exists.</li>
+      <li>Return to Browser A.</li>
+      <li>Click "Refresh Referral Data".</li>
+      <li>Confirm the referral count increased.</li>
+    </ol>
+  </div>
+</main>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+import { getFirestore, doc, getDoc, setDoc, getDocs, collection, query, where, limit, serverTimestamp }
+  from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyD5IQpzEAG0MjAUU7iOH19ueHltL_fO-CM",
+  authDomain: "refer-2c1d9.firebaseapp.com",
+  projectId: "refer-2c1d9",
+  storageBucket: "refer-2c1d9.firebasestorage.app",
+  messagingSenderId: "173106651302",
+  appId: "1:173106651302:web:5661aec1dd526d79465467",
+  measurementId: "G-XJ6D6XJ4N9"
+};
+
+const db = getFirestore(initializeApp(firebaseConfig));
+const $ = (id) => document.getElementById(id);
+const setText = (id, t, cls) => { const e = $(id); e.textContent = t; e.className = "val" + (cls ? " " + cls : ""); };
+const rand = (n) => {
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789";
+  const a = new Uint32Array(n); crypto.getRandomValues(a);
+  return Array.from(a, (x) => chars[x % chars.length]).join("");
+};
+const fail = (e) => {
+  console.error("[Referral] Firestore Error:", e);
+  setText("status", "Error: " + (e.code || e.message), "no");
+};
+
+let userId, myCode;
+
+async function initUser() {
+  userId = localStorage.getItem("ref_userId");
+  myCode = localStorage.getItem("ref_myCode");
+
+  if (userId && myCode) {
+    // Make sure the user doc still exists in Firestore
+    const snap = await getDoc(doc(db, "users", userId));
+    if (!snap.exists()) {
+      await setDoc(doc(db, "users", userId), { referralCode: myCode, createdAt: serverTimestamp() });
+    }
+  } else {
+    userId = "user_" + rand(10).toLowerCase();
+    for (let i = 0; i < 5; i++) {
+      const c = rand(6);
+      const q = query(collection(db, "users"), where("referralCode", "==", c), limit(1));
+      if ((await getDocs(q)).empty) { myCode = c; break; }
+    }
+    if (!myCode) throw new Error("Could not generate a unique referral code");
+    await setDoc(doc(db, "users", userId), { referralCode: myCode, createdAt: serverTimestamp() });
+    localStorage.setItem("ref_userId", userId);
+    localStorage.setItem("ref_myCode", myCode);
+  }
+
+  const link = location.origin + location.pathname + "?ref=" + myCode;
+  setText("userId", userId);
+  setText("myCode", myCode);
+  setText("myLink", link);
+  setText("status", "Connected (Firestore read/write OK)", "yes");
+  console.log("[Referral] User ID:", userId);
+  console.log("[Referral] My Code:", myCode);
+}
+
+async function handleReferral() {
+  const ref = (new URLSearchParams(location.search).get("ref") || "").trim().toUpperCase();
+  console.log("[Referral] Ref Code Detected:", ref || "(none)");
+  setText("detected", ref ? "YES" : "NO", ref ? "yes" : "no");
+  setText("referrerCode", ref || "-");
+
+  const prior = JSON.parse(localStorage.getItem("ref_recorded") || "null");
+  if (prior) {
+    setText("recorded", "YES (already recorded, not counted again)", "yes");
+    setText("docId", prior.docId);
+    return;
+  }
+  if (!ref) { setText("recorded", "NO", "no"); return; }
+  if (ref === myCode) { setText("recorded", "NO (self-referral blocked)", "no"); return; }
+
+  const q = query(collection(db, "users"), where("referralCode", "==", ref), limit(1));
+  if ((await getDocs(q)).empty) { setText("recorded", "NO (referrer not found)", "no"); return; }
+
+  // Doc ID = referred user's ID, so one user can never create two referral docs
+  await setDoc(doc(db, "referrals", userId), {
+    referrerCode: ref,
+    referredUserId: userId,
+    createdAt: serverTimestamp()
+  });
+  localStorage.setItem("ref_recorded", JSON.stringify({ docId: userId, referrerCode: ref }));
+  console.log("[Referral] Referral Saved:", userId, "-> referrer", ref);
+  setText("recorded", "YES", "yes");
+  setText("docId", userId);
+}
+
+async function loadReferrals() {
+  try {
+    const q = query(collection(db, "referrals"), where("referrerCode", "==", myCode));
+    const snap = await getDocs(q);
+    const items = snap.docs.map((d) => ({ id: d.id, ...d.data() }));
+    items.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
+    $("total").textContent = items.length;
+    const list = $("list");
+    list.textContent = "";
+    if (!items.length) { list.textContent = "No referrals yet."; return; }
+    items.forEach((r) => {
+      const div = document.createElement("div");
+      div.className = "ref-item";
+      const when = r.createdAt ? r.createdAt.toDate().toLocaleString() : "pending";
+      div.textContent = "Doc: " + r.id + " | Referred user: " + r.referredUserId + " | " + when;
+      list.appendChild(div);
+    });
+    console.log("[Referral] Total referrals loaded:", items.length);
+  } catch (e) { fail(e); }
+}
+
+$("copyBtn").onclick = async () => {
+  const link = $("myLink").textContent;
+  try { await navigator.clipboard.writeText(link); }
+  catch { prompt("Copy this link:", link); return; }
+  $("copyBtn").textContent = "Copied";
+  setTimeout(() => ($("copyBtn").textContent = "Copy Referral Link"), 1500);
+};
+$("refreshBtn").onclick = loadReferrals;
+
+(async () => {
+  try {
+    await initUser();
+    await handleReferral();
+    await loadReferrals();
+  } catch (e) { fail(e); }
+})();
+</script>
+</body>
+</html>
